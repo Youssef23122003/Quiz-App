@@ -19,7 +19,7 @@ export default function QuizView() {
     if (!searchTerm) return quizResults;
 
     return quizResults.filter((result) => {
-      const name = `${result.participant.first_name} ${result.participant.last_name}`.toLowerCase();
+      const name = `${result.participants.first_name} ${result.participants.last_name}`.toLowerCase();
       return name.includes(searchTerm.toLowerCase());
     });
   }, [searchTerm, quizResults]);
@@ -75,7 +75,7 @@ export default function QuizView() {
                 >
                   <td className="px-6 py-4">{i + 1}</td>
                   <td className="px-6 py-4 font-medium whitespace-nowrap">
-                    {item.participant.first_name} {item.participant.last_name}
+                    {item.participants.first_name} {item.participants.last_name}
                   </td>
                   <td className="px-6 py-4 text-center">{item.score}</td>
                   <td className="px-6 py-4 text-center">

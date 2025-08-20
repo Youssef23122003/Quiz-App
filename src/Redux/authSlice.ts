@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import type { ILogData, AuthState } from '../Interfaces/interfaces'
+import type { AuthState, ILogData } from '../Interfaces/Auth/interfaces';
+
 
 const userData = localStorage.getItem('user');
 

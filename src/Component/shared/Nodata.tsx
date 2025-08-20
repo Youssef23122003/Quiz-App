@@ -1,4 +1,3 @@
-import React from "react";
 import nodata from "../../assets/nodata-BviNkmy5.jpg";
 
 export default function Nodata() {

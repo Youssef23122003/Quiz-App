@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaTimes, FaCheck, FaSpinner } from 'react-icons/fa';
 import deleteimg from "../../assets/Delete-DKXDOf48.png";
 
