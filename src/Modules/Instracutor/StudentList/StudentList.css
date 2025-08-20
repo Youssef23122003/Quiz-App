@@ -1,0 +1,20 @@
+.CardListStudent {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.listStudent {
+    padding: 10px;
+}
+
+.drop_List_Student {
+    z-index: 9999 !important;
+}
+
+.drop_List_Student:hover {
+    z-index: 9999 !important;
+}

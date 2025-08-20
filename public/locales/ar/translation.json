@@ -1,0 +1,140 @@
+{
+  "sidebar": {
+    "dashboard": "لوحة التحكم",
+    "groups": "المجموعات",
+    "students": "الطلاب",
+    "quizzes": "الاختبارات",
+    "quizes-std": "الاختبارات",
+    "results": "النتائج",
+    "questions":"الاسئله",
+    "newQuiz": "اختبار جديد",
+    "help": "مساعدة"
+  },
+  "GroupsList": {
+    "title": "قائمة المجموعات",
+    "addGroup": "إضافة مجموعة",
+    "UpdateGroup": "تحديث مجموعه",
+    "group": "المجموعة",
+    "studentsCount": "عدد الطلاب",
+    "update": "تحديث المجموعة",
+    "create": "إنشاء مجموعة جديدة",
+    "groupName": "اسم المجموعة",
+    "listStudents": "قائمة الطلاب",
+    "selectStudents": "اختر الطلاب...",
+    "deleteGroup": "حذف المجموعة",
+    "groupDetails": "تفاصيل المجموعة",
+    "groupStatus": "حاله المجموعة",
+    "instructor": "رقم المشرف",
+    "status": "الحالة",
+    "students": "الطلاب",
+    "noGroups": "لا توجد مجموعات"
+  },
+  "QuizsList":{
+  "setupQuiz": "إعداد اختبار جديد",
+  "questionBank": "بنك الأسئلة",
+ "upcomingQuizzes": "الاختبارات القادمة",
+  "noUpcoming": "لا توجد اختبارات قادمة.",
+  "completedQuizzes": "الاختبارات المكتملة",
+  "results": "النتائج",
+  "title": "العنوان",
+ "groupName": "اسم المجموعة",
+  "persons":  "عدد الأشخاص في المجموعة",
+  "date": "التاريخ",
+  "enrolled":  "عدد الطلاب المسجلين",
+  "open": "فتح",
+ " failedToLoad": "فشل في تحميل الاختبارات"
+  },
+  "Dashboard": {
+    "upcomingQuizzes": "أحدث 5 اختبارات قادمة",
+    "noUpcomingQuizzes": "لا يوجد اختبارات قادمة حاليًا",
+    "loadingUpcoming": "جاري تحميل الاختبارات القادمة...",
+    "viewQuizDirectory": "عرض كل الاختبارات",
+    "topStudents": "أفضل 5 طلاب",
+    "allStudents": "عرض كل الطلاب",
+    "loadingTopStudents": "جاري تحميل أفضل الطلاب...",
+    "enrolled": "المسجلين",
+    "students": "طلاب",
+    "classRank": "الترتيب في المجموعة",
+    "avgScore": "متوسط الدرجات"
+  },
+  "studentDetails": {
+    "title": "تفاصيل الطالب",
+    "personalInfo": "المعلومات الشخصية",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "studentId": "معرّف الطالب",
+    "groupInfo": "معلومات المجموعة",
+    "groupName": "اسم المجموعة",
+    "noGroup": "بدون مجموعة"
+  },
+  "studentList": {
+    "searchPlaceholder": "ابحث باسم الطالب...",
+    "group": "المجموعة"
+  },
+  "actions": {
+    "view": "عرض",
+    "delete": "حذف الطالب"
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "questions": {
+    "title": "بنك الأسئلة",
+    "addQuestion": "إضافة سؤال",
+    "titleCol": "عنوان السؤال",
+    "descriptionCol": "وصف السؤال",
+    "searchPlaceholder": "بحث عن الاسئله",
+    "difficultyCol": "مستوى الصعوبة",
+    "actionsCol": "إجراءات",
+    "loading": "جارٍ تحميل الأسئلة...",
+    "noQuestions": "لا يوجد أسئلة.",
+    "updateTitle": "تعديل السؤال",
+    "answerLabel": "الإجابة الصحيحة",
+    "answerRequired": "الإجابة مطلوبة"
+  },
+  "quizPage": {
+    "joinQuiz": "انضم إلى اختبار",
+    "upcoming": "الاختبارات القادمة",
+    "noData": "لا توجد اختبارات حالياً",
+    "completed": "الاختبارات المكتملة",
+    "results": "النتائج",
+    "title": "الاسم",
+    "groupName": "اسم المجموعة",
+    "numOfPersons": "عدد الأفراد في المجموعة",
+    "date": "التاريخ",
+    "status": "الحالة",
+    "code": "الكود",
+    "open":"افتح",
+    "opened":"مفتوح",
+    "closed": "مغلق",
+    "loading": "جاري التحميل...",
+    "modal": {
+      "title": "انضم إلى اختبار",
+      "submit": "انضمام",
+      "cancel": "إلغاء",
+      "codeRequired": "الكود مطلوب"
+    }
+  },
+   "quizSection": {
+    "availableQuizzes": "الاختبارات المتاحة",
+    "searchPlaceholder": "ابحث عن اختبار...",
+    "scheduled": "موعد البدء",
+    "at": "في",
+    "duration": "المدة",
+    "minutes": "دقيقة",
+    "questions": "عدد الأسئلة",
+    "difficulty": "الصعوبة",
+    "participants": "عدد المشاركين",
+    "type": "النوع",
+    "status": "الحالة",
+    "viewDetails": "عرض التفاصيل",
+    "noQuizzesFound": "لا توجد اختبارات مطابقة لبحثك.",
+    "fetchError": "فشل في جلب الاختبارات"
+  }
+
+}

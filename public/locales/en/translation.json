@@ -1,0 +1,142 @@
+{
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "groups": "Groups",
+    "students": "Students",
+    "quizzes": "Quizzes",
+    "quizes-std": "Quizes",
+    "results": "Results",
+    "questions":"Qusetions",
+    "newQuiz": "New Quiz",
+    "help": "Help"
+  },
+  "GroupsList": {
+    "title": "Groups list",
+    "addGroup": "Add Group",
+    "UpdateGroup": "Update Group",
+    "group": "Group",
+    "studentsCount": "No. of students",
+    "update": "Update Group",
+     "groupStatus": "Group Status",
+    "create": "Set up a new Group",
+    "groupName": "Group Name",
+    "listStudents": "List Students",
+    "selectStudents": "Select students...",
+    "deleteGroup": "Delete Group",
+    "groupDetails": "Group Details",
+    "instructor": "Instructor Id",
+    "status": "Status",
+    "students": "Students",
+    "noGroups": "No groups found."
+  },
+  "QuizsList":{
+  "setupQuiz": "Set up a new quiz",
+  "questionBank": "Question Bank",
+  "upcomingQuizzes": "Upcoming quizzes",
+  "noUpcoming": "No upcoming quizzes found.",
+  "completedQuizzes": "Completed Quizzes",
+  "results": "Results",
+  "title": "Title",
+  "groupName": "Group name",
+  "persons": "No. of persons in group",
+  "date": "Date",
+  "enrolled": "No. of students enrolled",
+  "open": "Open",
+  "failedToLoad": "Failed to load quizzes"
+  },
+  "Dashboard": {
+    "upcomingQuizzes": "Upcoming 5 quizzes",
+    "noUpcomingQuizzes": "No upcoming quizzes available",
+    "loadingUpcoming": "Loading upcoming quizzes...",
+    "viewQuizDirectory": "View Quiz directory",
+    "topStudents": "Top 5 Students",
+    "allStudents": "All Students",
+    "loadingTopStudents": "Loading top students...",
+    "enrolled": "Enrolled",
+    "students": "students",
+    "classRank": "Class rank",
+    "avgScore": "Average score"
+  }
+  , "studentDetails": {
+    "title": "Student Details",
+    "personalInfo": "Personal Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "studentId": "Student ID",
+    "groupInfo": "Group Information",
+    "groupName": "Group Name",
+    "noGroup": "No Group"
+  },
+  "studentList": {
+    "searchPlaceholder": "Search by student name...",
+    "group": "Group"
+  },
+  "actions": {
+    "view": "View",
+    "delete": "Delete student"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "questions": {
+    "title": "Bank Of Questions",
+    "addQuestion": "Add Question",
+    "titleCol": "Question Title",
+    "descriptionCol": "Question Desc",
+    "searchPlaceholder": "Search Questions...",
+    "difficultyCol": "Question difficulty level",
+    "actionsCol": "Actions",
+    "loading": "Loading questions...",
+    "noQuestions": "No questions found.",
+    "updateTitle": "Update Question",
+    "answerLabel": "Question Answer",
+    "answerRequired": "Answer is required"
+  },
+  "quizPage": {
+    "joinQuiz": "Join Quiz",
+    "upcoming": "Upcoming Quizzes",
+    "noData": "No quizzes available",
+    "completed": "Completed Quizzes",
+    "results": "Results",
+    "title": "Title",
+    "groupName": "Group name",
+    "numOfPersons": "No. of persons in group",
+    "date": "Date",
+    "status": "Status",
+    "code": "Code",
+    "open": "Open",
+    "opened":"Opened",
+    "closed": "Closed",
+    "loading": "Loading...",
+    "modal": {
+      "title": "Join Quiz",
+      "submit": "Join",
+      "cancel": "Cancel",
+      "codeRequired": "Code is required"
+    }
+  },
+  "quizSection": {
+    "availableQuizzes": "Available Quizzes",
+    "searchPlaceholder": "Search quizzes...",
+    "scheduled": "Scheduled",
+    "at": "at",
+    "duration": "Duration",
+    "minutes": "min",
+    "questions": "Questions",
+    "difficulty": "Difficulty",
+    "participants": "Participants",
+    "type": "Type",
+    "status": "Status",
+    "viewDetails": "View Details",
+    "noQuizzesFound": "No quizzes found matching your search.",
+    "fetchError": "Failed to fetch quizzes"
+  }
+}
+
+
+

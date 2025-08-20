@@ -1,0 +1,51 @@
+@import "tailwindcss";
+.e {
+    color: #b0ee95;
+}
+
+.dark header,.dark .layout,.dark aside{
+    background-color: black;
+    color: white;
+    transition: all 0.4s;
+}
+
+.dark .pagination-points ,.dark .student-card{
+    color: black;
+}
+
+.dark .quiz-tiele ,.dark .quiz-nav ,.dark .hamburger-button{
+    color: white;
+    transition: all 0.4s;
+}
+
+.dark .quesition-container{
+    background-color: black;
+}
+
+.dark-logo{
+    display: none;
+}
+
+.dark .dark-links,.dark .help-link{
+    color: white;
+    transition: all 0.4s;
+}
+.dark .dark-links:hover,.dark .help-link:hover,.dark .hamburger-button:hover{
+    color: black;
+    background-color: white;
+}
+
+.dark .dark-logo{
+    display: block;
+}
+
+.dark .light-logo{
+    display: none;
+}
+
+.dark .active-link{
+    background-color: white;
+    color: black;
+}
+
+
