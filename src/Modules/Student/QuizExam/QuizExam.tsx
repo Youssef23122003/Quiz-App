@@ -1,17 +1,15 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { axiosInstance, Students_Quizes } from "../../../Server/baseUrl";
 import { toast } from "react-toastify";
 import type { Question } from "../../../Interfaces/Questions/Interfaces";
-
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function QuizExam() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const quizId = location.state
- 
-  
+  const quizId = location.state;
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
@@ -41,7 +39,7 @@ export default function QuizExam() {
 
         setQuestions(data.questions);
         setTimeLeft(data.duration * 60);
-        setQuizTitle(data.title); 
+        setQuizTitle(data.title);
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Error fetching questions.");
       } finally {
@@ -88,7 +86,6 @@ export default function QuizExam() {
     } catch (error: any) {
       toast.error("Failed to send answers.");
       console.log(error);
-      
     } finally {
       setIsSubmitting(false);
     }
@@ -114,9 +111,16 @@ export default function QuizExam() {
       {loading ? (
         <p className="text-center text-gray-500">Loading...</p>
       ) : (
-        <>
+        <AnimatePresence>
           {questions.map((q, index) => (
-            <div key={q._id} className="mb-6 p-4 border rounded-lg shadow quesition-container bg-white">
+            <motion.div
+              key={q._id}
+              className="mb-6 p-4 border rounded-lg shadow quesition-container bg-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
               <h2 className="text-md font-semibold mb-3">
                 {index + 1}. {q.title}
               </h2>
@@ -138,24 +142,24 @@ export default function QuizExam() {
                     </button>
                   ))}
               </div>
-            </div>
+            </motion.div>
           ))}
-
-          <div className="text-center mt-6">
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className={`w-full py-2 cursor-pointer rounded-lg transition ${
-                isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed text-white"
-                  : "bg-green-600 hover:bg-green-700 text-white"
-              }`}
-            >
-              {isSubmitting ? "Sending..." : "Sending answers"}
-            </button>
-          </div>
-        </>
+        </AnimatePresence>
       )}
+
+      <div className="text-center mt-6">
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className={`w-full py-2 cursor-pointer rounded-lg transition ${
+            isSubmitting
+              ? "bg-gray-400 cursor-not-allowed text-white"
+              : "bg-green-600 hover:bg-green-700 text-white"
+          }`}
+        >
+          {isSubmitting ? "Sending..." : "Sending answers"}
+        </button>
+      </div>
     </div>
   );
 }

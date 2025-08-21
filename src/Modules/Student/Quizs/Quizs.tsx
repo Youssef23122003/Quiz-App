@@ -10,47 +10,46 @@ import { useNavigate } from 'react-router-dom';
 import type { JoinQuiz, Quiz } from '../../../Interfaces/Quizzes/Interfaces';
 import JoinQuizModal from './JoinQuizModal';
 import Nodata from '../../../Component/shared/Nodata';
+import { motion } from 'framer-motion';
 
 export default function Quizs() {
   const [FirstFiveIncommingQuizes, setFirstFiveIncommingQuiz] = useState<Quiz[]>([]);
   const [LastFiveCompletedQuizes, setLastFiveCompletedQuiz] = useState<Quiz[]>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [loadingUpcoming, setLoadingUpcoming] = useState<boolean>(false);
+  const [loadingCompleted, setLoadingCompleted] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [modalLoading, setmodalLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const showModalJoinQuiz = () => {
-    setShowModal(true);
-  };
+  const { setValue } = useForm<JoinQuiz>();
 
+  const showModalJoinQuiz = () => setShowModal(true);
   const closeModalJoinQuiz = () => {
     setShowModal(false);
     setValue('code', '');
   };
 
-  const { setValue } = useForm<JoinQuiz>();
-
   const getFirstFiveIncommingQuizz = async () => {
     try {
-      setIsLoading(true);
+      setLoadingUpcoming(true);
       const res = await axiosInstance.get(Students_Quizes.First_Five_Incomming_Quizz);
       setFirstFiveIncommingQuiz(res?.data);
     } catch (error: any) {
       console.log(error);
     } finally {
-      setIsLoading(false);
+      setLoadingUpcoming(false);
     }
   };
 
   const getLastFiveCompletedQuizz = async () => {
     try {
-      setIsLoading(true);
+      setLoadingCompleted(true);
       const res = await axiosInstance.get(Students_Quizes.Last_Five_Completed_Quizz);
       setLastFiveCompletedQuiz(res?.data);
     } catch (error: any) {
       console.log(error);
     } finally {
-      setIsLoading(false);
+      setLoadingCompleted(false);
     }
   };
 
@@ -62,7 +61,7 @@ export default function Quizs() {
       navigate('/quiz-exam', { state: res?.data?.data?.quiz });
     } catch (error: any) {
       console.log(error);
-      toast.error(error.response.data.message || 'An error occurred.');
+      toast.error(error.response?.data?.message || 'An error occurred.');
     } finally {
       setmodalLoading(false);
     }
@@ -72,7 +71,6 @@ export default function Quizs() {
     getFirstFiveIncommingQuizz();
     getLastFiveCompletedQuizz();
   }, []);
-
 
   const QuizCardSkeleton = () => (
     <div className="space-y-3 bg-white sm:space-y-4 mt-4 animate-pulse">
@@ -87,7 +85,6 @@ export default function Quizs() {
       </div>
     </div>
   );
-
 
   const TableSkeleton = () => (
     <tbody className="animate-pulse">
@@ -114,10 +111,11 @@ export default function Quizs() {
     <>
       <div className="space-y-6 Quiz-Students">
         <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6">
-          <button
-            onClick={() => {
-              showModalJoinQuiz();
-            }}
+          {/* Join Quiz Button */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={showModalJoinQuiz}
             className="flex cursor-pointer flex-col items-center justify-center p-6 lg:p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group min-h-[200px]"
           >
             <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4 lg:mb-6 group-hover:bg-gray-100 transition-colors duration-200">
@@ -128,7 +126,7 @@ export default function Quizs() {
             <span className="text-base lg:text-lg font-semibold text-gray-900 text-center">
               {t('quizPage.joinQuiz')}
             </span>
-          </button>
+          </motion.button>
 
           <div className="flex flex-col mt-6 lg:flex-row gap-6">
             {/* Upcoming */}
@@ -137,63 +135,67 @@ export default function Quizs() {
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2">
                   {t('quizPage.upcoming')}
                 </h2>
-                {isLoading ? (
+                {loadingUpcoming ? (
                   <>
                     <QuizCardSkeleton />
                     <QuizCardSkeleton />
                   </>
-                ) : FirstFiveIncommingQuizes.length <= 0 ? (
+                ) : FirstFiveIncommingQuizes.length === 0 ? (
                   <div className="text-center py-4 text-gray-500 text-sm sm:text-base">
-                    <Nodata/>
+                    <Nodata />
                   </div>
                 ) : (
-                  <>
-                    {FirstFiveIncommingQuizes.map((quiz) => (
-                      <div key={quiz?._id} className="space-y-3 bg-white sm:space-y-4 mt-4">
-                        <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 p-4 sm:p-6 bg-white rounded-2xl border border-orange-100 hover:shadow-md transition-all duration-200">
-                          <div className="w-16 h-16 bg-orange-50 sm:w-20 sm:h-20 lg:w-32 lg:h-32 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <img
-                              src={img1}
-                              alt="Quiz illustration"
-                              className="w-full h-full sm:w-12 sm:h-12 lg:w-full lg:h-full object-contain"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-gray-900 text-sm sm:text-base lg:text-xl mb-1 sm:mb-2 line-clamp-2">
-                              {t('quizPage.title')}: {quiz?.title}
-                            </h3>
-                            <p className="text-black mb-2 sm:mb-3 text-xs sm:text-sm lg:text-base">
-                              {t('quizPage.date')}: {quiz?.schadule && new Date(quiz?.schadule).toLocaleString()}
-                            </p>
-                            <p className="text-black mb-2 sm:mb-3 text-xs sm:text-sm lg:text-base">
-                              {t('quizPage.code')}: {quiz?.code}
-                            </p>
-                            <p className="text-black mb-2 sm:mb-3 text-xs sm:text-sm lg:text-base">
-                              {t('quizPage.status')}:{' '}
-                              <span
-                                className={`text-xs font-semibold px-3 py-1 rounded-full mb-3 ${
-                                  quiz.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                }`}
-                              >
-                                {quiz.status === 'open' ? t('quizPage.open') : t('quizPage.closed')}
-                              </span>
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => {
-                              showModalJoinQuiz();
-                            }}
-                            className="flex cursor-pointer items-center gap-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 hover:shadow-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 flex-shrink-0"
-                          >
-                            <span className="font-medium text-xs sm:text-sm lg:text-base">{t('quizPage.opened')}:</span>
-                            <div className="w-4 h-4 sm:w-5 sm:h-5 bg-[#C5D86D] rounded-full flex items-center justify-center">
-                              <HiArrowRight className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
-                            </div>
-                          </button>
+                  FirstFiveIncommingQuizes.map((quiz, index) => (
+                    <motion.div
+                      key={quiz._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="space-y-3 bg-white sm:space-y-4 mt-4"
+                    >
+                      <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 p-4 sm:p-6 bg-white rounded-2xl border border-orange-100 hover:shadow-md transition-all duration-200">
+                        <div className="w-16 h-16 bg-orange-50 sm:w-20 sm:h-20 lg:w-32 lg:h-32 rounded-2xl flex items-center justify-center flex-shrink-0">
+                          <img
+                            src={img1}
+                            alt="Quiz illustration"
+                            className="w-full h-full sm:w-12 sm:h-12 lg:w-full lg:h-full object-contain"
+                          />
                         </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-gray-900 text-sm sm:text-base lg:text-xl mb-1 sm:mb-2 line-clamp-2">
+                            {t('quizPage.title')}: {quiz.title}
+                          </h3>
+                          <p className="text-black mb-2 sm:mb-3 text-xs sm:text-sm lg:text-base">
+                            {t('quizPage.date')}: {quiz.schadule && new Date(quiz.schadule).toLocaleString()}
+                          </p>
+                          <p className="text-black mb-2 sm:mb-3 text-xs sm:text-sm lg:text-base">
+                            {t('quizPage.code')}: {quiz.code}
+                          </p>
+                          <p className="text-black mb-2 sm:mb-3 text-xs sm:text-sm lg:text-base">
+                            {t('quizPage.status')}:{' '}
+                            <span
+                              className={`text-xs font-semibold px-3 py-1 rounded-full mb-3 ${
+                                quiz.status === 'open'
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-red-100 text-red-700'
+                              }`}
+                            >
+                              {quiz.status === 'open' ? t('quizPage.open') : t('quizPage.closed')}
+                            </span>
+                          </p>
+                        </div>
+                        <button
+                          onClick={showModalJoinQuiz}
+                          className="flex cursor-pointer items-center gap-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 hover:shadow-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 flex-shrink-0"
+                        >
+                          <span className="font-medium text-xs sm:text-sm lg:text-base">{t('quizPage.opened')}:</span>
+                          <div className="w-4 h-4 sm:w-5 sm:h-5 bg-[#C5D86D] rounded-full flex items-center justify-center">
+                            <HiArrowRight className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
+                          </div>
+                        </button>
                       </div>
-                    ))}
-                  </>
+                    </motion.div>
+                  ))
                 )}
               </div>
             </div>
@@ -214,51 +216,39 @@ export default function Quizs() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="bg-gray-900">
-                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
-                            {t('quizPage.title')}
-                          </th>
-                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
-                            {t('quizPage.groupName')}
-                          </th>
-                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
-                            {t('quizPage.numOfPersons')}
-                          </th>
-                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
-                            {t('quizPage.date')}
-                          </th>
+                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t('quizPage.title')}</th>
+                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t('quizPage.groupName')}</th>
+                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t('quizPage.numOfPersons')}</th>
+                          <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t('quizPage.date')}</th>
                         </tr>
                       </thead>
-                      {isLoading ? (
+
+                      {loadingCompleted ? (
                         <TableSkeleton />
-                      ) : LastFiveCompletedQuizes.length > 0 ? (
-                        <>
-                          {LastFiveCompletedQuizes.map((quiz) => (
-                            <tbody key={quiz._id}>
-                              <tr className="border-b border-gray-200 bg-white hover:bg-gray-50 transition-colors duration-200">
-                                <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-sm sm:text-base">
-                                  {quiz?.title}
-                                </td>
-                                <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
-                                  {quiz?.group}
-                                </td>
-                                <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
-                                  {quiz?.participants}
-                                </td>
-                                <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
-                                  {quiz.createdAt && new Date(quiz?.createdAt).toLocaleString()}
-                                </td>
-                              </tr>
-                            </tbody>
-                          ))}
-                        </>
-                      ) : (
+                      ) : LastFiveCompletedQuizes.length === 0 ? (
                         <tbody>
                           <tr>
                             <td colSpan={4} className="text-center py-4 text-gray-500">
-                              <Nodata/>
+                              <Nodata />
                             </td>
                           </tr>
                         </tbody>
+                      ) : (
+                        LastFiveCompletedQuizes.map((quiz) => (
+                          <motion.tbody
+                            key={quiz._id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4 }}
+                          >
+                            <tr className="border-b border-gray-200 bg-white hover:bg-gray-50 transition-colors duration-200">
+                              <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-sm sm:text-base">{quiz.title}</td>
+                              <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{quiz.group}</td>
+                              <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{quiz.participants}</td>
+                              <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{quiz.createdAt && new Date(quiz.createdAt).toLocaleString()}</td>
+                            </tr>
+                          </motion.tbody>
+                        ))
                       )}
                     </table>
                   </div>
