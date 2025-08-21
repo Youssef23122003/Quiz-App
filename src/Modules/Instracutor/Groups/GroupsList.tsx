@@ -327,26 +327,50 @@ export default function GroupsList() {
                     <label htmlFor="studentsList" className="flex items-center justify-center flex-shrink-0 bg-[#f8ebd9] text-lg font-bold text-black px-4 py-3 rounded-l-lg" style={{ minWidth: '110px' }}>
                       List Students
                     </label>
-                    <Controller
-                      name="students"
-                      control={control}
-                      rules={{ required: 'Students are required' }}
-                      render={({ field }) => (
-                        <div className="flex-grow">
-                          <Select
-                            {...field}
-                            id="studentsList"
-                            options={studentOptions}
-                            isMulti
-                            placeholder="Select students..."
-                            value={studentOptions.filter(option => field.value?.includes(option.value))}
-                            onChange={(selectedOptions) => {
-                              field.onChange(selectedOptions ? selectedOptions.map(option => option.value) : []);
-                            }}
-                          />
-                        </div>
-                      )}
-                    />
+                   <Controller
+  name="students"
+  control={control}
+  rules={{ required: 'Students are required' }}
+  render={({ field }) => (
+    <div className="flex-grow h-full">
+      <Select
+        {...field}
+        id="studentsList"
+        options={studentOptions}
+        isMulti
+        placeholder ="Select students..."
+        value={studentOptions.filter(option => field.value?.includes(option.value))}
+        onChange={(selectedOptions) => {
+          field.onChange(selectedOptions ? selectedOptions.map(option => option.value) : []);
+        }}
+        styles={{
+          control: (base) => ({
+            ...base,
+            height: '100%',           
+            minHeight: '0',           
+            border: 'none',         
+            boxShadow: 'none',
+          }),
+          valueContainer: (base) => ({
+            ...base,
+            height: '100%',
+            padding: '0 8px',        
+          }),
+          input: (base) => ({
+            ...base,
+            margin: 0,
+            padding: 0,
+          }),
+          indicatorsContainer: (base) => ({
+            ...base,
+            height: '100%',
+          }),
+        }}
+      />
+    </div>
+  )}
+/>
+
                   </div>
                   {errors.students && <p className='text-red-600 text-sm mt-1'>{errors.students.message}</p>}
                 </div>
