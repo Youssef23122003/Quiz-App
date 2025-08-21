@@ -2,6 +2,7 @@ import { FaCheck, FaSpinner, FaTimes } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { t } from "i18next";
 import React from "react";
+import { motion } from "framer-motion";
 
 type Props = {
   isOpen: boolean;
@@ -18,7 +19,12 @@ export default function QuestionAnswerUpdateModal({
   defaultAnswer = "",
   loading = false,
 }: Props) {
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm({ defaultValues: { answer: defaultAnswer } });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({ defaultValues: { answer: defaultAnswer } });
 
   React.useEffect(() => {
     setValue("answer", defaultAnswer);
@@ -30,15 +36,27 @@ export default function QuestionAnswerUpdateModal({
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white w-[500px] rounded-lg shadow-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">{t("questions.updateTitle")}</h3>
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex items-center justify-between px-6 py-4 border-b border-gray-200"
+          >
+            <h3 className="text-lg font-semibold text-gray-800">
+              {t("questions.updateTitle")}
+            </h3>
             <div className="flex items-center gap-4">
               <button
                 type="submit"
                 disabled={loading}
                 className="text-gray-600 hover:text-green-600 transition-colors"
               >
-                {loading ? <FaSpinner className="animate-spin" /> : <FaCheck className="text-xl" />}
+                {loading ? (
+                  <FaSpinner className="animate-spin" />
+                ) : (
+                  <FaCheck className="text-xl" />
+                )}
               </button>
               <button
                 type="button"
@@ -48,9 +66,15 @@ export default function QuestionAnswerUpdateModal({
                 <FaTimes className="text-xl" />
               </button>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="p-6 space-y-4">
+          {/* Input */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="p-6 space-y-4"
+          >
             <div className="relative flex border border-gray-200 rounded-lg focus-within:border-gray-200">
               <label
                 htmlFor="answer"
@@ -66,8 +90,12 @@ export default function QuestionAnswerUpdateModal({
                 className="flex-grow px-4 py-3 rounded-r-lg focus:outline-none text-gray-800"
               />
             </div>
-            {errors.answer && <p className="text-red-600 text-sm mt-1">{errors.answer.message}</p>}
-          </div>
+            {errors.answer && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.answer.message}
+              </p>
+            )}
+          </motion.div>
         </form>
       </div>
     </div>

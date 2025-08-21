@@ -12,6 +12,7 @@ import { useSelector } from "react-redux"
 import type { RootState } from "../../../Redux/store"
 import { t } from "i18next"
 import Nodata from "../../../Component/shared/Nodata"
+import { motion } from "framer-motion"
 
 function UpcomingSkeleton() {
   return (
@@ -103,8 +104,6 @@ export default function QuizsList() {
     }
   }
 
-
- 
     async function fetchAllQuizzes() {
       try {
         const res = await axiosInstance.get(Quizzes_URLS.SetUP_Quizz);
@@ -150,39 +149,68 @@ export default function QuizsList() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-            <button onClick={() => setIsQuizModalOpen(true)} className="flex cursor-pointer flex-col items-center justify-center p-6 lg:p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group min-h-[200px]">
+            
+            {/* Setup Quiz Button */}
+            <motion.button 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              onClick={() => setIsQuizModalOpen(true)} 
+              className="flex cursor-pointer flex-col items-center justify-center p-6 lg:p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-lg transition-all duration-200 group min-h-[200px]"
+            >
               <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4 lg:mb-6 group-hover:bg-gray-100 transition-colors duration-200">
                 <div className="w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
                   <MdQuiz className="w-5 h-5 lg:w-6 lg:h-6 text-gray-700" />
                 </div>
               </div>
               <span className="text-base lg:text-lg font-semibold text-gray-900 text-center">{t("QuizsList.setupQuiz")}</span>
-            </button>
+            </motion.button>
 
-            <button onClick={() => navigate("/questions")} className="flex cursor-pointer flex-col items-center justify-center p-6 lg:p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 group min-h-[200px]">
+            {/* Question Bank */}
+            <motion.button 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              onClick={() => navigate("/questions")} 
+              className="flex cursor-pointer flex-col items-center justify-center p-6 lg:p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:shadow-lg transition-all duration-200 group min-h-[200px]"
+            >
               <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4 lg:mb-6 group-hover:bg-gray-100 transition-colors duration-200">
                 <div className="w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
                   <HiComputerDesktop className="w-5 h-5 lg:w-6 lg:h-6 text-gray-700" />
                 </div>
               </div>
               <span className="text-base lg:text-lg font-semibold text-gray-900 text-center">{t("QuizsList.questionBank")}</span>
-            </button>
+            </motion.button>
           </div>
           <AllQuizzesPage />
         </div>
 
-       
+        {/* Right Section */}
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6">
+          {/* Upcoming Quizzes */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6"
+          >
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">{t("QuizsList.upcomingQuizzes")}</h2>
 
             {loadingUpcoming ? (
                <UpcomingSkeleton />
             ) : upcomingQuizzes.length > 0 ? (
               <div className="space-y-3 bg-white sm:space-y-4">
-                {upcomingQuizzes.map((quiz) => (
-                  <div
+                {upcomingQuizzes.map((quiz, idx) => (
+                  <motion.div
                     key={quiz._id}
+                    whileHover={{ scale: 1.02 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: idx * 0.1 }}
                     className="flex items-center gap-3 sm:gap-4 lg:gap-6 p-4 sm:p-6 bg-white rounded-2xl border border-orange-100 hover:shadow-md transition-all duration-200"
                   >
                     <div className="w-16 h-16 bg-orange-50 sm:w-20 sm:h-20 lg:w-32 lg:h-32 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -205,26 +233,33 @@ export default function QuizsList() {
                       </p>
                     </div>
 
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => handleViewDetails(quiz._id)}
-                      className="flex cursor-pointer items-center gap-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 hover:shadow-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 flex-shrink-0"
+                      className="flex cursor-pointer items-center gap-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 hover:shadow-sm transition-all duration-200 flex-shrink-0"
                     >
                       <span className="font-medium text-xs sm:text-sm lg:text-base">{t("QuizsList.open")}</span>
                       <div className="w-4 h-4 sm:w-5 sm:h-5 bg-[#C5D86D] rounded-full flex items-center justify-center">
                         <HiArrowRight className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
                       </div>
-                    </button>
-                  </div>
+                    </motion.button>
+                  </motion.div>
                 ))}
               </div>
             ):(<Nodata/>) }
-          </div>
+          </motion.div>
 
           {/* Completed Quizzes */}
-          <div className="bg-white w-full rounded-2xl  border border-gray-200 p-4 sm:p-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-white w-full rounded-2xl border border-gray-200 p-4 sm:p-6"
+          >
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{t("QuizsList.completedQuizzes")}</h2>
-              <button onClick={()=> navigate('/quiz-result')} className="flex cursor-pointer items-center gap-2 text-orange-500 hover:text-orange-600 font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 rounded-lg px-2 sm:px-3 py-2">
+              <button onClick={()=> navigate('/quiz-result')} className="flex cursor-pointer items-center gap-2 text-orange-500 hover:text-orange-600 font-medium transition-colors duration-200 rounded-lg px-2 sm:px-3 py-2">
                 <span className="text-sm sm:text-base text-gray-900">{t("QuizsList.results")}</span>
                 <HiArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-[#C5D86D]" />
               </button>
@@ -233,43 +268,31 @@ export default function QuizsList() {
             <div className="overflow-x-auto">
               <div className="overflow-hidden rounded-xl border border-gray-200 min-w-full">
                 <table className="w-full text-sm">
-    
                   <tbody>
                     {loadingComplete ? (
                         <CompletedSkeleton />
                     ) : CompletedQuizes.length > 0 ? (
-                      <div className="overflow-x-auto">
-                        <div className="overflow-hidden rounded-xl border border-gray-200 min-w-full">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="bg-gray-900">
-                                <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">  {t("QuizsList.title")}</th>
-                                <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t("QuizsList.groupName")}</th>
-                                <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t("QuizsList.persons")}</th>
-                                <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t("QuizsList.date")}</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {CompleteQuizzes.map((quiz, index) => (
-                                <tr
-                                  key={quiz._id}
-                                  className={`border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors duration-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                    }`}
-                                >
-                                  <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-sm sm:text-base">
-                                    {quiz.title}
-                                  </td>
-                                  <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{quiz.type}</td>
-                                  <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
-                                    {quiz.participants} persons
-                                  </td>
-                                  <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{quiz.schadule}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+                      <tbody>
+                        {CompleteQuizzes.map((quiz, index) => (
+                          <motion.tr
+                            key={quiz._id}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.1 }}
+                            className={`border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors duration-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                              }`}
+                          >
+                            <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-sm sm:text-base">
+                              {quiz.title}
+                            </td>
+                            <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{quiz.type}</td>
+                            <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
+                              {quiz.participants} persons
+                            </td>
+                            <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{quiz.schadule}</td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
                     ): (
                       <tr>
                         <td colSpan={4} className="py-8 text-center text-gray-500">
@@ -281,7 +304,7 @@ export default function QuizsList() {
                 </table>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     

@@ -13,7 +13,7 @@ import { t } from 'i18next';
 import DeleteModal from '../../../Component/shared/Delete';
 import type { Student } from '../../../Interfaces/Students/Interfaces';
 import { StudentDetailsModal } from './StudentViewModel';
-
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 
 function StudentSkeletonLoader({ count = 12 }: { count?: number }) {
   return (
@@ -37,7 +37,6 @@ function StudentSkeletonLoader({ count = 12 }: { count?: number }) {
     </div>
   );
 }
-
 
 export default function StudentList() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -71,6 +70,7 @@ export default function StudentList() {
   if (user?.role === 'Student') {
     navigate('/dashboard');
   }
+
   async function fetchStudents() {
     setLoading(true);
     try {
@@ -84,7 +84,7 @@ export default function StudentList() {
   }
 
   async function deleteStudent() {
-    if (!studentId) return; 
+    if (!studentId) return;
     setmodalLoading(true);
     try {
       const response = await axiosInstance.delete(STUDENTS_URLS.DELETE_STUDENT(studentId));
@@ -112,6 +112,7 @@ export default function StudentList() {
       setViewLoading(false);
     }
   }
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -122,6 +123,26 @@ export default function StudentList() {
 
   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
   const paginatedStudents = filteredStudents.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  // ---------------- Framer Motion Variants ----------------
+  const listVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
+const cardVariants: Variants = {
+  hidden:  { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  exit:    { opacity: 0, y: -16, transition: { duration: 0.25 } },
+};
+
+const menuVariants: Variants = {
+  hidden:  { opacity: 0, y: -8, scale: 0.98 },
+  visible: { opacity: 1, y: 0,  scale: 1,    transition: { duration: 0.18 } },
+  exit:    { opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.15 } },
+};
+
+  
 
   return (
     <>
@@ -140,61 +161,83 @@ export default function StudentList() {
         </form>
 
         {loading ? (
-         
           <StudentSkeletonLoader count={itemsPerPage} />
         ) : (
           <>
-            <div className="flex justify-center flex-wrap gap-4">
-              {paginatedStudents.map((user) => (
-                <div
-                  key={user._id}
-                  className="relative flex items-center justify-between p-4 gap-4 bg-white rounded-lg shadow-md w-full md:w-[48%] lg:w-[31%]"
-                >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user.first_name}`}
-                      alt="avatar"
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                    <div>
-                      <h4 className="font-semibold text-black text-lg">
-                        {user.first_name} {user.last_name}
-                      </h4>
-                      <span className="block text-sm text-gray-600">
-                        {t('studentList.group')}: {user.group?.name || t('studentDetails.noGroup')}
-                      </span>
-                      <div className="flex items-center gap-1 text-green-600 text-sm mt-1">
-                        <span>{t(`status.${user.status.toLowerCase()}`)}</span>
-                        <IoCheckmarkCircle />
+            <motion.div
+              className="flex justify-center flex-wrap gap-4"
+              variants={listVariants}
+              initial="hidden"
+              animate="visible"
+              key={`page-${page}-${searchTerm}`}
+            >
+              <AnimatePresence>
+                {paginatedStudents.map((user) => (
+                  <motion.div
+                    key={user._id}
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
+                    className="relative flex items-center justify-between p-4 gap-4 bg-white rounded-lg shadow-md w-full md:w-[48%] lg:w-[31%]"
+                  >
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user.first_name}`}
+                        alt="avatar"
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
+                      <div>
+                        <h4 className="font-semibold text-black text-lg">
+                          {user.first_name} {user.last_name}
+                        </h4>
+                        <span className="block text-sm text-gray-600">
+                          {t('studentList.group')}: {user.group?.name || t('studentDetails.noGroup')}
+                        </span>
+                        <div className="flex items-center gap-1 text-green-600 text-sm mt-1">
+                          <span>{t(`status.${user.status.toLowerCase()}`)}</span>
+                          <IoCheckmarkCircle />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    onClick={() => toggleMenu(user._id)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                  >
-                    <IoIosArrowForward className="text-black text-lg" />
-                  </div>
 
-                  {openMenuId === user._id && (
-                    <div className="absolute right-4 top-16 bg-white shadow-lg rounded-md z-20 text-sm w-48">
-                      <button
-                        onClick={() => viewStudent(user._id)}
-                        className="w-full px-4 py-2 hover:bg-gray-100 text-left flex text-black items-center"
-                      >
-                        <FaRegEye className="mr-2 text-green-600 text-lg" /> {t('actions.view')}
-                      </button>
-                      <button
-                        onClick={() => openDeleteModal(user?._id)}
-                        className="w-full px-4 py-2 hover:bg-gray-100 text-black text-left flex items-center"
-                      >
-                        <MdDelete className="mr-2 text-red-600 text-lg" /> {t('actions.delete')}
-                      </button>
+                    <div
+                      onClick={() => toggleMenu(user._id)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                    >
+                      <IoIosArrowForward className="text-black text-lg" />
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+
+                    <AnimatePresence>
+                      {openMenuId === user._id && (
+                        <motion.div
+                          key="menu"
+                          variants={menuVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          className="absolute right-4 top-16 bg-white shadow-lg rounded-md z-20 text-sm w-48 border border-gray-100"
+                        >
+                          <button
+                            onClick={() => viewStudent(user._id)}
+                            className="w-full px-4 py-2 hover:bg-gray-100 text-left flex text-black items-center"
+                          >
+                            <FaRegEye className="mr-2 text-green-600 text-lg" /> {t('actions.view')}
+                          </button>
+                          <button
+                            onClick={() => openDeleteModal(user?._id)}
+                            className="w-full px-4 py-2 hover:bg-gray-100 text-black text-left flex items-center"
+                          >
+                            <MdDelete className="mr-2 text-red-600 text-lg" /> {t('actions.delete')}
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
 
             {totalPages > 1 && (
               <div className="flex justify-center mt-6">

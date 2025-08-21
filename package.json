@@ -17,6 +17,7 @@
     "date-fns": "^4.1.0",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.12.5",
+    "framer-motion": "^12.23.12",
     "i18next": "^25.3.2",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",

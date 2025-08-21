@@ -1,42 +1,51 @@
 import { useEffect, useState, useMemo } from "react";
-import { FaRegEye} from "react-icons/fa";
+import { FaRegEye } from "react-icons/fa";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { axiosInstance } from "../../../Server/baseUrl";
-import { t } from 'i18next';
+import { t } from "i18next";
 import { useNavigate } from "react-router-dom";
 import type { QuizResult } from "../../../Interfaces/Quizzes/Interfaces";
+import { motion } from "framer-motion";
 
-
-
+// Skeleton for loading table
 function ResultsTableSkeleton({ rows = 5 }) {
   return (
     <>
       {Array.from({ length: rows }).map((_, rowIndex) => (
-        <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+        <motion.tr
+          key={rowIndex}
+          className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: rowIndex * 0.1 }}
+        >
           {Array.from({ length: 7 }).map((_, colIndex) => (
             <td key={colIndex} className="px-4 py-3">
               <div className="h-4 bg-gray-200 rounded animate-pulse w-full"></div>
             </td>
           ))}
-        </tr>
+        </motion.tr>
       ))}
     </>
   );
 }
+
+// TypeScript fix: define the shape of participants to avoid errors
+
 
 
 export default function ResultsPage() {
   const [results, setResults] = useState<QuizResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get("/api/quiz/result"); 
-      console.log(res.data)
+      const res = await axiosInstance.get("/api/quiz/result");
+      console.log(res.data);
+      
       setResults(res.data);
     } catch (err) {
       console.error("Failed to fetch results", err);
@@ -91,25 +100,38 @@ const navigate = useNavigate();
                   <ResultsTableSkeleton rows={6} />
                 ) : filteredResults.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-8 text-gray-500">
+                    <td colSpan={7} className="text-center py-8 text-gray-500">
                       No closed quizzes found.
                     </td>
                   </tr>
                 ) : (
-                  filteredResults.map(({ quiz , participants }) => (
-                    <tr key={quiz._id} className="border-b border-gray-200">
+                  filteredResults.map(({ quiz, participants }, index) => (
+                    <motion.tr
+                      key={quiz._id}
+                      className="border-b border-gray-200"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                    >
                       <td className="px-4 py-3 text-center font-medium">{quiz.title}</td>
                       <td className="px-4 py-3 text-center">{quiz.status}</td>
                       <td className="px-4 py-3 text-center">{quiz.code}</td>
                       <td className="px-4 py-3 text-center">{new Date(quiz.schadule).toLocaleString()}</td>
                       <td className="px-4 py-3 text-center">{quiz.duration} mins</td>
                       <td className="px-4 py-3 text-center capitalize">{quiz.difficulty}</td>
-                      <button
-                      onClick={() => navigate(`/quiz-result-view`,{ state: {participants , title:quiz.title}  })}
-                        className="w-full rounded-2xl text-center px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center">
-                                          <FaRegEye className="mr-2 text-green-600 text-lg" /> {t("actions.view")}
-                                        </button>
-                    </tr>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() =>
+                            navigate(`/quiz-result-view`, {
+                              state: { participants: participants ?? [], title: quiz.title },
+                            })
+                          }
+                          className="w-full rounded-2xl px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center justify-center"
+                        >
+                          <FaRegEye className="mr-2 text-green-600 text-lg" /> {t("actions.view")}
+                        </button>
+                      </td>
+                    </motion.tr>
                   ))
                 )}
               </tbody>

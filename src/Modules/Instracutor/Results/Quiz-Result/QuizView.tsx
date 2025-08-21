@@ -1,31 +1,39 @@
 import { useLocation, Link } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { HiChevronRight, HiMagnifyingGlass } from "react-icons/hi2";
-import type { QuizResult } from "../../../../Interfaces/Quizzes/Interfaces";
-
 
 
 export default function QuizView() {
   const { state } = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const quizResults: QuizResult[] = state.participants || [];
 
-  console.log(quizResults)
+  const quizResults: Array<{
+    _id: string;
+    participant: {
+      _id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+    };
+    score: number;
+    started_at: string;
+    finished_at: string;
+  }> = state.participants || [];
 
   const quizTitle = state.title || "Quiz";
 
   const filteredResults = useMemo(() => {
     if (!searchTerm) return quizResults;
 
-    return quizResults.filter((result) => {
-      const name = `${result.participants.first_name} ${result.participants.last_name}`.toLowerCase();
+    return quizResults.filter((item) => {
+      const name = `${item.participant.first_name} ${item.participant.last_name}`.toLowerCase();
       return name.includes(searchTerm.toLowerCase());
     });
   }, [searchTerm, quizResults]);
 
   return (
-    <div className="p-4 sm:p-6  mx-auto">
+    <div className="p-4 sm:p-6 mx-auto">
       {/* Breadcrumb */}
       <nav className="mb-6 text-sm quiz-nav text-gray-600" aria-label="Breadcrumb">
         <ol className="flex items-center space-x-2">
@@ -75,12 +83,10 @@ export default function QuizView() {
                 >
                   <td className="px-6 py-4">{i + 1}</td>
                   <td className="px-6 py-4 font-medium whitespace-nowrap">
-                    {item.participants.first_name} {item.participants.last_name}
+                    {item.participant.first_name} {item.participant.last_name}
                   </td>
                   <td className="px-6 py-4 text-center">{item.score}</td>
-                  <td className="px-6 py-4 text-center">
-                    {item.finished_at}
-                  </td>
+                  <td className="px-6 py-4 text-center">{item.finished_at}</td>
                 </tr>
               ))
             ) : (

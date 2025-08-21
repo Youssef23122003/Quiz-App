@@ -60,16 +60,27 @@ export interface QuizSectionProps {
   embedded?: boolean
 }
 
+export interface ParticipantData {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
 export interface QuizResult {
   _id: string;
-  quiz:Quiz
-  participants: {
+   quiz:Quiz
+   participants: Array<{
     _id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-  };
+    participant: ParticipantData;
+    score: number;
+    started_at: string;
+    finished_at: string;
+  }>;
   score: number;
   started_at: string;
   finished_at: string;
 }
+
+
+

@@ -1,6 +1,13 @@
-
 import { useState, useMemo, useEffect } from "react";
-import { HiEye, HiPencilSquare, HiTrash, HiPlus, HiMagnifyingGlass } from "react-icons/hi2";
+import {
+  HiEye,
+  HiPencilSquare,
+  HiTrash,
+  HiPlus,
+  HiMagnifyingGlass,
+  HiEllipsisVertical,
+} from "react-icons/hi2";
+import { Menu } from "@headlessui/react";
 import { toast } from "react-toastify";
 import { axiosInstance, Questions_URLS } from "../../../Server/baseUrl";
 import DeleteModal from "../../../Component/shared/Delete";
@@ -8,11 +15,17 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../Redux/store";
 import { useNavigate } from "react-router-dom";
 import { t } from "i18next";
-import type { Question, QuestionData, QuestionFormData, UpdatedQuestion } from "../../../Interfaces/Questions/Interfaces";
+import type {
+  Question,
+  QuestionData,
+  QuestionFormData,
+  UpdatedQuestion,
+} from "../../../Interfaces/Questions/Interfaces";
 import QuestionSetupModal from "./AddModel/QuestionSetupModal";
 import QuestionViewModal from "./ViewModal/QuestionDetailsModal";
 import QuestionAnswerUpdateModal from "./QuestionAnswerUpdateModal/QuestionAnswerUpdateModal";
 import Nodata from "../../../Component/shared/Nodata";
+import { motion, AnimatePresence } from "framer-motion";
 
 function SkeletonTable({ rows = 5 }) {
   return (
@@ -22,7 +35,9 @@ function SkeletonTable({ rows = 5 }) {
           {Array.from({ length: rows }).map((_, index) => (
             <tr
               key={index}
-              className={`last:border-b-0 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+              className={`last:border-b-0 ${
+                index % 2 === 0 ? "bg-white" : "bg-gray-50"
+              }`}
             >
               {[1, 2, 3, 4].map((_, i) => (
                 <td key={i} className="py-3 px-3 sm:px-6">
@@ -42,19 +57,25 @@ export default function QuestionBankPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [questionsData, setQuestionsData] = useState<Question[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedQuestion, setSelectedQuestion] = useState<QuestionData | null>(null);
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
-  const [selectedQuestionUpdatedId, setSelectedQuestionUpdatedId] = useState<string | null>(null);
-  const [selectedAnswer, setSelectedAnswer] = useState<"A" | "B" | "C" | "D" | "">("");
+  const [selectedQuestion, setSelectedQuestion] =
+    useState<QuestionData | null>(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
+    null
+  );
+  const [selectedQuestionUpdatedId, setSelectedQuestionUpdatedId] = useState<
+    string | null
+  >(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<
+    "A" | "B" | "C" | "D" | ""
+  >("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalLoading, setModalLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const user = useSelector((state: RootState) => state.auth.LogData);
   const navigate = useNavigate();
 
-
   useEffect(() => {
-    if (user?.role === "Student") navigate('/dashboard');
+    if (user?.role === "Student") navigate("/dashboard");
   }, [user, navigate]);
 
   const handleViewQuestion = (question: Question) => {
@@ -75,12 +96,10 @@ export default function QuestionBankPage() {
     setSelectedQuestion(null);
   };
 
- 
   const showModalUpdate = (question: Question) => {
     setSelectedQuestionUpdatedId(question._id);
     setSelectedAnswer(question.answer as "A" | "B" | "C" | "D");
   };
-
 
   const openDeleteModal = (question: Question) => {
     setSelectedQuestionId(question._id);
@@ -89,13 +108,16 @@ export default function QuestionBankPage() {
 
   const closeDeleteModal = () => setShowDeleteModal(false);
 
-
   const handleUpdateAnswer = async (data: UpdatedQuestion) => {
-    if (!selectedQuestionUpdatedId) return toast.error("Question ID is missing");
+    if (!selectedQuestionUpdatedId)
+      return toast.error("Question ID is missing");
 
     try {
       setModalLoading(true);
-      const res = await axiosInstance.put(Questions_URLS.Update_Question(selectedQuestionUpdatedId), data);
+      const res = await axiosInstance.put(
+        Questions_URLS.Update_Question(selectedQuestionUpdatedId),
+        data
+      );
       toast.success(res.data.message);
       setSelectedQuestionUpdatedId(null);
       setSelectedAnswer("");
@@ -107,13 +129,14 @@ export default function QuestionBankPage() {
     }
   };
 
-  
   const handleDeleteQuestion = async () => {
     if (!selectedQuestionId) return toast.error("Question ID is missing");
 
     try {
       setModalLoading(true);
-      const res = await axiosInstance.delete(Questions_URLS.Delete_Question(selectedQuestionId));
+      const res = await axiosInstance.delete(
+        Questions_URLS.Delete_Question(selectedQuestionId)
+      );
       toast.success(res.data.message);
       closeDeleteModal();
       fetchQuestions();
@@ -124,7 +147,6 @@ export default function QuestionBankPage() {
     }
   };
 
- 
   const handleAddQuestion = async (payload: QuestionFormData) => {
     try {
       await axiosInstance.post(Questions_URLS.SetUP_Questions, payload);
@@ -136,7 +158,6 @@ export default function QuestionBankPage() {
     }
   };
 
-
   const filteredQuestions = useMemo(() => {
     if (!searchTerm) return questionsData;
     const lower = searchTerm.toLowerCase();
@@ -147,7 +168,6 @@ export default function QuestionBankPage() {
         q.difficulty.toLowerCase().includes(lower)
     );
   }, [questionsData, searchTerm]);
-
 
   async function fetchQuestions() {
     setLoading(true);
@@ -167,17 +187,26 @@ export default function QuestionBankPage() {
 
   return (
     <>
-      <div className="mx-auto Questions-list">
+      <motion.div
+        className="mx-auto Questions-list"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-            <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">{t("questions.title")}</h1>
-            <button
+            <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
+              {t("questions.title")}
+            </h1>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setIsQuestionModalOpen(true)}
               className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-all"
             >
               <HiPlus className="w-5 h-5" />
               <span>{t("questions.addQuestion")}</span>
-            </button>
+            </motion.button>
           </div>
 
           <div className="relative mb-6">
@@ -196,53 +225,163 @@ export default function QuestionBankPage() {
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-900">
-                    <th className="py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t("questions.titleCol")}</th>
-                    <th className="text-center py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t("questions.descriptionCol")}</th>
-                    <th className="text-center py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t("questions.difficultyCol")}</th>
-                    <th className="text-center py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">{t("questions.actionsCol")}</th>
+                    <th className="py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
+                      {t("questions.titleCol")}
+                    </th>
+                    <th className="text-center py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
+                      {t("questions.descriptionCol")}
+                    </th>
+                    <th className="text-center py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
+                      {t("questions.difficultyCol")}
+                    </th>
+                    <th className="text-center py-3 sm:py-4 px-3 sm:px-6 font-semibold text-white text-sm sm:text-base">
+                      {t("questions.actionsCol")}
+                    </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {!loading && filteredQuestions.length > 0 ? (
-                    filteredQuestions.map((question, idx) => (
-                      <tr key={question._id} className={`border-b border-gray-200 last:border-b-0 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
-                        <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-sm sm:text-base">{question.title}</td>
-                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">{question.description}</td>
-                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
-                          <span className={`${question.difficulty === "easy" ? "bg-green-500" : question.difficulty === "medium" ? "bg-gray-500" : "bg-red-700"} rounded-2xl p-2 text-white font-bold`}>
-                            {question.difficulty}
-                          </span>
-                        </td>
-                        <td className="py-3 sm:py-4 px-3 sm:px-5">
-                          <div className="flex items-center lg:gap-2 gap-0">
-                            <button onClick={() => handleViewQuestion(question)} className="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100">
-                              <HiEye className="w-5 h-5" />
-                            </button>
-                            <button onClick={() => showModalUpdate(question)} className="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100">
-                              <HiPencilSquare className="w-5 h-5" />
-                            </button>
-                            <button onClick={() => openDeleteModal(question)} className="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100">
-                              <HiTrash className="w-5 h-5" />
-                            </button>
-                          </div>
+                <AnimatePresence>
+                  <tbody>
+                    {!loading && filteredQuestions.length > 0 ? (
+                      filteredQuestions.map((question, idx) => (
+                        <motion.tr
+                          key={question._id}
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -15 }}
+                          transition={{ duration: 0.3 }}
+                          className={`border-b border-gray-200 last:border-b-0 ${
+                            idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          }`}
+                        >
+                          <td className="py-3 text-center sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-sm sm:text-base">
+                            {question.title}
+                          </td>
+                          <td className="py-3 text-center sm:py-4 px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
+                            {question.description}
+                          </td>
+                          <td className="py-3 sm:py-4 flex justify-center px-3 sm:px-6 text-gray-700 text-sm sm:text-base">
+                            <span
+                              className={`inline-flex items-center justify-center ${
+                                {
+                                  easy: "bg-green-100 text-green-700 border border-green-300",
+                                  medium:
+                                    "bg-yellow-100 text-yellow-700 border border-yellow-300",
+                                  hard: "bg-red-100 text-red-700 border border-red-300",
+                                }[question.difficulty] ||
+                                "bg-gray-100 text-gray-600 border border-gray-300"
+                              } rounded-full px-4 py-1 text-xs font-semibold shadow-sm`}
+                            >
+                              {question.difficulty}
+                            </span>
+                          </td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-5">
+                           
+                            <div className="hidden lg:flex items-center gap-2">
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => handleViewQuestion(question)}
+                                className="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100"
+                              >
+                                <HiEye className="w-5 h-5" />
+                              </motion.button>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => showModalUpdate(question)}
+                                className="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100"
+                              >
+                                <HiPencilSquare className="w-5 h-5" />
+                              </motion.button>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => openDeleteModal(question)}
+                                className="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100"
+                              >
+                                <HiTrash className="w-5 h-5" />
+                              </motion.button>
+                            </div>
+
+                           
+                            <div className="lg:hidden">
+                              <Menu as="div" className="relative inline-block text-left">
+                                <div>
+                                  <Menu.Button className="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100">
+                                    <HiEllipsisVertical className="w-5 h-5" />
+                                  </Menu.Button>
+                                </div>
+
+                                <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-lg shadow-lg focus:outline-none z-20">
+                                  <div className="px-1 py-1">
+                                    <Menu.Item>
+                                      {({ active }) => (
+                                        <button
+                                          onClick={() => handleViewQuestion(question)}
+                                          className={`${
+                                            active
+                                              ? "bg-orange-100 text-orange-600"
+                                              : "text-gray-700"
+                                          } flex w-full items-center rounded-md px-3 py-2 text-sm gap-2`}
+                                        >
+                                          <HiEye className="w-4 h-4" /> View
+                                        </button>
+                                      )}
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                      {({ active }) => (
+                                        <button
+                                          onClick={() => showModalUpdate(question)}
+                                          className={`${
+                                            active
+                                              ? "bg-orange-100 text-orange-600"
+                                              : "text-gray-700"
+                                          } flex w-full items-center rounded-md px-3 py-2 text-sm gap-2`}
+                                        >
+                                          <HiPencilSquare className="w-4 h-4" /> Edit
+                                        </button>
+                                      )}
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                      {({ active }) => (
+                                        <button
+                                          onClick={() => openDeleteModal(question)}
+                                          className={`${
+                                            active
+                                              ? "bg-orange-100 text-orange-600"
+                                              : "text-gray-700"
+                                          } flex w-full items-center rounded-md px-3 py-2 text-sm gap-2`}
+                                        >
+                                          <HiTrash className="w-4 h-4" /> Delete
+                                        </button>
+                                      )}
+                                    </Menu.Item>
+                                  </div>
+                                </Menu.Items>
+                              </Menu>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={12} className="text-center text-gray-500">
+                          {loading ? (
+                            <SkeletonTable rows={questionsData.length || 5} />
+                          ) : (
+                            <Nodata />
+                          )}
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={12} className="text-center text-gray-500">
-                        {loading ? <SkeletonTable rows={questionsData.length || 5} /> : <Nodata/>}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                    )}
+                  </tbody>
+                </AnimatePresence>
               </table>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Modals */}
       <QuestionAnswerUpdateModal
         isOpen={!!selectedQuestionUpdatedId}
         onClose={() => setSelectedQuestionUpdatedId(null)}
@@ -251,7 +390,11 @@ export default function QuestionBankPage() {
         loading={modalLoading}
       />
 
-      <QuestionSetupModal isOpen={isQuestionModalOpen} onClose={() => setIsQuestionModalOpen(false)} onSubmit={handleAddQuestion} />
+      <QuestionSetupModal
+        isOpen={isQuestionModalOpen}
+        onClose={() => setIsQuestionModalOpen(false)}
+        onSubmit={handleAddQuestion}
+      />
 
       <DeleteModal
         message="Are you sure you want to delete this Question?"
@@ -262,7 +405,11 @@ export default function QuestionBankPage() {
         loading={modalLoading}
       />
 
-      <QuestionViewModal isOpen={isModalOpen} onClose={handleCloseViewModal} question={selectedQuestion} />
+      <QuestionViewModal
+        isOpen={isModalOpen}
+        onClose={handleCloseViewModal}
+        question={selectedQuestion}
+      />
     </>
   );
 }

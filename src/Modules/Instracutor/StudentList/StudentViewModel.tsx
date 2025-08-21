@@ -9,11 +9,13 @@ export function StudentDetailsModal({
   onClose,
   student,
   loading,
+  
 }: {
   isOpen: boolean;
   onClose: () => void;
   student: Student | null;
   loading: boolean;
+  
 }) {
   return (
     <Transition show={isOpen} as={Fragment}>
